@@ -1,8 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Warehouse } from "../../inventory/entities/warehouse.entity.js";
-import { User } from "../../users/entities/user.entity.js";
-import { PurchaseItem } from "./purchase-item.entity.js";
-import type { Supplier } from "./supplier.entity.js";
+import { PurchaseDetail } from "./purchase-detail.entity.js";
+import { Supplier } from "../../suppliers/entities/supplier.entity.js";
 
 export enum PurchaseStatus {
     PENDING = 'PENDING',
@@ -12,30 +10,32 @@ export enum PurchaseStatus {
 
 @Entity('purchases')
 export class Purchase { 
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2 })
-    total_amount: number;
+    @Column({ unique: true })
+    invoice_number: string;
 
-    @Column({ type: 'enum', enum: PurchaseStatus, default: PurchaseStatus.PENDING })
-    status: PurchaseStatus;
+    @Column()
+    supplier_id: number;
 
-    @ManyToOne('Supplier', (supplier: any) => supplier.purchases, { onDelete: 'RESTRICT' })
+    @ManyToOne(() => Supplier, { eager: true })
     @JoinColumn({ name: 'supplier_id' })
     supplier: Supplier;
 
-    @ManyToOne(() => Warehouse, { onDelete: 'RESTRICT' })
-    @JoinColumn({ name: 'warehouse_id' })
-    warehouse: Warehouse; // Almacén a donde ingresa la mercancía
+    @Column('decimal', { precision: 10, scale: 2 })
+    total_cost: number;
 
-    @ManyToOne(() => User, { onDelete: 'RESTRICT' })
-    @JoinColumn({ name: 'user_id' })
-    user: User; // Usuario que registró la compra
-
-    @OneToMany(() => PurchaseItem, (item) => item.purchase, { cascade: true })
-    items: PurchaseItem[];
-
+    @Column({
+        type: 'enum',
+        enum: PurchaseStatus,
+        default: PurchaseStatus.COMPLETED,
+    })
+    status: PurchaseStatus;
+    
     @CreateDateColumn()
     created_at: Date;
+
+    @OneToMany('PurchaseDetail', (detail: any) => detail.purchase, { cascade: true })
+    details: PurchaseDetail[];
 }

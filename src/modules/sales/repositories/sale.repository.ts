@@ -8,4 +8,4 @@ export interface ISaleRepository {
     save(sale: Sale): Promise<Sale>;
 }
 
-export const SALE_REPOSITORY  = Symbol('SALE_REPOSITORY');
+export const SALE_REPOSITORY = Symbol('SALE_REPOSITORY');

@@ -1,9 +1,8 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { WAREHOUSE_REPOSITORY } from "./repositories/warehouse.repository.js";
-import type { IWarehouseRepository } from "./repositories/warehouse.repository.js";
+import { WAREHOUSE_REPOSITORY } from "../warehouse/repositories/warehouse.repository.js";
+import type { IWarehouseRepository } from "../warehouse/repositories/warehouse.repository.js";
 import { Warehouse } from "./entities/warehouse.entity.js";
 import { WarehouseDto } from "./dtos/warehouse.dto.js";
-
 
 @Injectable()
 export class WarehouseService {
@@ -25,10 +24,9 @@ export class WarehouseService {
     }
 
     async create(dto: WarehouseDto): Promise<Warehouse> {
-        const existing = await this.warehouseRepository.findByName(dto.name);
-        if (existing) {
-            throw new ConflictException(`Ya existe un almacén con el nombre "${dto.name}".`);
-        }
-        return this.warehouseRepository.create(dto);
+        const warehouse = new Warehouse();
+        warehouse.name = dto.name;
+        warehouse.location = dto.location ?? null; 
+        return await this.warehouseRepository.save(warehouse);
     }
 } 

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Warehouse } from "./warehouse.entity.js";
 import { Product } from "../../catalog/entities/product.entity.js";
 import { User } from "../../users/entities/user.entity.js";
+import { Warehouse } from "../../warehouse/entities/warehouse.entity.js";
 
 export enum MovementType {
     IN = 'IN',       // Entrada (Compra, devolución)

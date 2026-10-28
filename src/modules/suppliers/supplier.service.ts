@@ -1,7 +1,8 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { SUPPLIER_REPOSITORY } from "./repositories/supplier.repository.js";
-import type { ISupplierRepository } from "./repositories/supplier.repository.js";
+import type { ISupplierRepository } from "./repositories/supplier.repository.js"
 import { Supplier } from "./entities/supplier.entity.js";
+
 import { SupplierDto } from "./dtos/supplier.dto.js";
 
 @Injectable()
@@ -24,6 +25,13 @@ export class SupplierService {
     }
 
     async create(dto: SupplierDto): Promise<Supplier> {
-        return this.supplierRepository.create(dto);
+        const supplier = new Supplier();
+        supplier.name = dto.name;
+        supplier.contact_name = dto.contact_name ?? null;
+        supplier.phone = dto.phone ?? null;
+        supplier.email = dto.email ?? null;
+        supplier.address = dto.address ?? null;
+
+        return await this.supplierRepository.save(supplier);
     }
 }

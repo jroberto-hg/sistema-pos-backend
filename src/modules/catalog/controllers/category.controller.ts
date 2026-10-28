@@ -17,13 +17,13 @@ export class CategoryController {
     @Get(':id')
     async findById(@Param('id', ParseIntPipe) id: number) {
         const category = await this.categoryService.findById(id);
-        return new WebResponse(category, 200, "SUCCESS", "");
+        return new WebResponse(category, HttpStatus.OK, "SUCCESS", "");
     }
 
     @Post()
     async create(@Body() body: { name: string; description?: string; is_active?: boolean }) {
         const newCategory = await this.categoryService.create(body);
-        return new WebResponse(newCategory, 201, "SUCCESS", "Categoría dada de alta correctamente");
+        return new WebResponse(newCategory, HttpStatus.CREATED, "SUCCESS", "Categoría dada de alta correctamente");
     }
 
     @Patch(':id')
@@ -32,12 +32,12 @@ export class CategoryController {
         @Body() body: Partial<{ name: string; description: string; is_active: boolean }>
     ) {
         const updatedCategory = await this.categoryService.update(id, body);
-        return new WebResponse(updatedCategory, 200, "SUCCESS", "Categoría actualizada correctamente");
+        return new WebResponse(updatedCategory, HttpStatus.OK, "SUCCESS", "Categoría actualizada correctamente");
     }
 
     @Delete(':id')
     async remove(@Param('id', ParseIntPipe) id: number) {
         const result = await this.categoryService.remove(id);
-        return new WebResponse(result, 200, "SUCCESS", "Categoría eliminada correctamente");
+        return new WebResponse(result, HttpStatus.OK, "SUCCESS", "Categoría eliminada correctamente");
     }
 }

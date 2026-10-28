@@ -12,20 +12,11 @@ export class WarehouseRepositoryImpl implements IWarehouseRepository {
     ) { }
 
     async findAll(): Promise<Warehouse[]> {
-        return this.warehouseRepository.find();
+        return this.warehouseRepository.find({ order: { name: 'ASC' } });
     }
 
     async findById(id: number): Promise<Warehouse | null> {
         return this.warehouseRepository.findOne({ where: { id } });
-    }
-
-    async findByName(name: string): Promise<Warehouse | null> {
-        return this.warehouseRepository.findOne({ where: { name } });
-    }
-
-    async create(data: Partial<Warehouse>): Promise<Warehouse> {
-        const warehouse = this.warehouseRepository.create(data);
-        return this.warehouseRepository.save(warehouse);
     }
 
     async save(warehouse: Warehouse): Promise<Warehouse> {
