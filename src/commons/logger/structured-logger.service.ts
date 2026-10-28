@@ -1,13 +1,24 @@
 import { Injectable, LoggerService } from "@nestjs/common";
 import { TransactionLogDto } from "./dto/transaction-logger.dto.js";
+import { PinoLogger } from "nestjs-pino";
 
 @Injectable()
 export class StructuredLoggerService implements LoggerService {
-    log(message: string, context?: string) { }
+    constructor(private readonly pinoLogger: PinoLogger) {
+        this.pinoLogger.setContext('POS.Backend');
+    }
 
-    error(message: string, trace?: string, context?: string) { }
+    log(message: string, context?: string) { 
+        this.pinoLogger.info(message);
+    }
 
-    warn(message: string, context?: string) { }
+    error(message: string, trace?: string, context?: string) { 
+        this.pinoLogger.error({ trace }, message);
+    }
+
+    warn(message: string, context?: string) { 
+        this.pinoLogger.warn(message);
+    }
 
     // Método centralizado para generar la traza
     logTransaction(data: {
@@ -40,7 +51,7 @@ export class StructuredLoggerService implements LoggerService {
                 correlationId: `corr-${Date.now()}`
             },
             applicationInfo: {
-                name: "Coppel.POS.Backend",
+                name: "POS.Backend",
                 version: "1.0.0",
                 environment: process.env.NODE_ENV || "DEV",
                 kind: "rest-service",
@@ -64,6 +75,10 @@ export class StructuredLoggerService implements LoggerService {
             })
         };
 
-        console.log(JSON.stringify(logPayload, null, 2));
+        if (success) {
+            this.pinoLogger.info(logPayload);
+        } else {
+            this.pinoLogger.error(logPayload);
+        }
     }
 }
