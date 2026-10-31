@@ -13,7 +13,7 @@ async function bootstrap() {
   });
 
   // Registrar el interceptor global para auditoría, tiempos y trazas automáticas
-  const loggerService = new StructuredLoggerService();
+  const loggerService = app.get(StructuredLoggerService);
   app.useGlobalInterceptors(new TransactionLoggerInterceptor(loggerService));
 
   const PORT = process.env.PORT ?? 3000;

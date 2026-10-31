@@ -1,7 +1,8 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Customer } from "../../customers/entities/customer.entity.js";
 import { User } from "../../users/entities/user.entity.js";
-import { QuotationItem } from "./quotation-item.entity.js";
+import { QuotationDetail } from "./quotation-detail.entity.js";
+
 
 export enum QuotationStatus { 
     PENDING = 'PENDING',
@@ -32,8 +33,8 @@ export class Quotation {
     @JoinColumn({ name: 'user_id' })
     user: User; // Usuario que creó la cotización
 
-    @OneToMany(() => QuotationItem, (item) => item.quotation, { cascade: true })
-    items: QuotationItem[];
+    @OneToMany(() => QuotationDetail, (item) => item.quotation, { cascade: true })
+    items: QuotationDetail[];
 
     @CreateDateColumn()
     created_at: Date;

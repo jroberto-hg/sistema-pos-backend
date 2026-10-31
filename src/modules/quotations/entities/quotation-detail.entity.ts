@@ -2,8 +2,8 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 import type { Quotation } from "./quotation.entity.js";
 import { Product } from "../../catalog/entities/product.entity.js";
 
-@Entity('quotation_items')
-export class QuotationItem { 
+@Entity('quotation_detail')
+export class QuotationDetail { 
     @PrimaryGeneratedColumn('increment')
     id: number;
 

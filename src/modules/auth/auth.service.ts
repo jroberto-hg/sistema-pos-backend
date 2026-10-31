@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { USER_REPOSITORY } from '../../users/repositories/user.repository.js';
-import type { IUserRepository } from '../../users/repositories/user.repository.js';
-import { AuthDto } from '../dtos/auth.dto.js';
+import { USER_REPOSITORY } from '../users/repositories/user.repository.js';
+import type { IUserRepository } from '../users/repositories/user.repository.js';
+import { LoginDto } from './dtos/login.dto.js';
 
 @Injectable()
 export class AuthService {
@@ -13,9 +13,16 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) {}
 
-    async login(dto: AuthDto) {
+    async login(dto: LoginDto) {
+        let user = null;
+        
         // Buscar al usuario por su username
-        const user = await this.userRepository.findByUsername(dto.username);
+        if (dto.username) { 
+            user = await this.userRepository.findByUsername(dto.username);
+        } else if (dto.email) {
+            user = await this.userRepository.findByEmail(dto.email);
+        }
+
         if (!user) {
             throw new UnauthorizedException('Credenciales inválidas.');
         }
